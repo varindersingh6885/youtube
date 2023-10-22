@@ -1,8 +1,16 @@
+import { useDispatch } from "react-redux";
+import { toggleSidebarMenu } from "../utils/redux-store/appSlice";
 import HamburgerIcon from "../images/icon-hamburger.png";
 import YoutubeIcon from "../images/icon-youtube-label.png";
 import UserIcon from "../images/icon-user.png";
 
 export const Header = () => {
+  const dispatch = useDispatch();
+
+  const toggleSidebarMenuHandler = () => {
+    dispatch(toggleSidebarMenu());
+  };
+
   return (
     <header className="p-4 grid grid-flow-col shadow-md">
       <div className="flex col-span-2 items-center">
@@ -10,6 +18,7 @@ export const Header = () => {
           className="h-8 cursor-pointer"
           src={HamburgerIcon}
           alt="icon-menu"
+          onClick={toggleSidebarMenuHandler}
         />
         <img
           className="h-8 mx-3 cursor-pointer"
