@@ -8,7 +8,7 @@ export const SideNav = () => {
   }
 
   return (
-    <div className="py-2 px-4 border-r-2 basis-40">
+    <div className="py-2 px-4 border-r-2 basis-40 h-full">
       <div className="py-2 border-b">
         <ul className="pl-2 ">
           <li>Home</li>

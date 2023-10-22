@@ -3,7 +3,7 @@ import { SideNav } from "./SideNav";
 
 export const Body = () => {
   return (
-    <div className="flex grow">
+    <div className="flex grow overflow-auto">
       <SideNav />
       <MainContentContainer />
     </div>
