@@ -3,6 +3,7 @@ import { toggleSidebarMenu } from "../utils/redux-store/appSlice";
 import HamburgerIcon from "../images/icon-hamburger.png";
 import YoutubeIcon from "../images/icon-youtube-label.png";
 import UserIcon from "../images/icon-user.png";
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -20,11 +21,13 @@ export const Header = () => {
           alt="icon-menu"
           onClick={toggleSidebarMenuHandler}
         />
-        <img
-          className="h-8 mx-3 cursor-pointer"
-          src={YoutubeIcon}
-          alt="icon-youtube"
-        />
+        <Link to={"./"}>
+          <img
+            className="h-8 mx-3 cursor-pointer"
+            src={YoutubeIcon}
+            alt="icon-youtube"
+          />
+        </Link>
       </div>
 
       <div className="col-span-8 text-center">
