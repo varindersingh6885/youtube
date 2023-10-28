@@ -10,7 +10,7 @@ export const WatchVideoPage = () => {
 
   useEffect(() => {
     dispatch(closeSidebarMenu());
-  }, []);
+  }, [dispatch]);
   return (
     <div>
       <iframe
