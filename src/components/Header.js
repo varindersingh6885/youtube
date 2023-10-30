@@ -6,15 +6,24 @@ import YoutubeIcon from "../images/icon-youtube-label.png";
 import UserIcon from "../images/icon-user.png";
 import { Link } from "react-router-dom";
 import { GET_SEARCH_SUGGESTIONS } from "../utils/constants";
+import {
+  toggleBodyBackdrop,
+  closeBodyBackdrop,
+  openBodyBackdrop,
+  setBackdropClickHandler,
+} from "../utils/redux-store/bodyBackdropSlice";
 
 export const Header = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const [shouldFetchSuggestions, setShouldFetchSuggestions] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
   const dispatch = useDispatch();
 
   const handleSearchInput = (e) => {
     setSearchInput(e.target.value);
+    setShouldFetchSuggestions(true);
   };
 
   const toggleSidebarMenuHandler = () => {
@@ -22,37 +31,74 @@ export const Header = () => {
   };
 
   const fetchSearchSuggestions = async () => {
-    const data = await fetch(GET_SEARCH_SUGGESTIONS + searchInput);
-    const json = await data.json();
-    const suggestions = json?.items?.map((item) => {
-      return item?.snippet?.title;
-    });
+    // const data = await fetch(GET_SEARCH_SUGGESTIONS + searchInput);
+    // const json = await data.json();
+    // const suggestions = json?.suggestions?.map((suggestion) => {
+    //   return suggestion?.value;
+    // });
+
+    // setSearchSuggestions(suggestions);
+
+    const suggestions = ["iphone", "iphone 15", "iphone 14 pro", "iphone red"];
 
     setSearchSuggestions(suggestions);
+
+    if (suggestions?.length) {
+      dispatch(openBodyBackdrop());
+    }
   };
 
   const handleSearchInputOnFocus = () => {
     setShowSuggestions(true);
+    setIsSearchInputFocused(true);
     !!searchInput && fetchSearchSuggestions();
   };
-  const handleSearchInputOnBlur = () => {
-    setShowSuggestions(false);
-    setSearchSuggestions([]);
-  };
+  // const handleSearchInputOnBlur = () => {
+  // setTimeout(() => {
+  //   setSearchSuggestions([]);
+  //   setShowSuggestions(false);
+  // }, 500);
+  // };
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (searchInput) {
+      if (searchInput && shouldFetchSuggestions && isSearchInputFocused) {
+        console.log(searchInput, shouldFetchSuggestions);
         fetchSearchSuggestions();
       } else {
         setSearchSuggestions([]);
       }
-    }, 250);
+    }, 300);
 
     return () => {
       clearTimeout(timer);
+      setSearchSuggestions([]);
     };
-  }, [searchInput]);
+  }, [searchInput, shouldFetchSuggestions, isSearchInputFocused]);
+
+  useEffect(() => {
+    console.log("seting handler backdrop click");
+    dispatch(
+      setBackdropClickHandler({
+        handler: () => {
+          setIsSearchInputFocused(false);
+          setShowSuggestions(false);
+          setShouldFetchSuggestions(false);
+          setSearchSuggestions([]);
+          dispatch(closeBodyBackdrop());
+        },
+      })
+    );
+  }, []);
+
+  const handleSuggestionSelect = (suggestion) => {
+    setIsSearchInputFocused(false);
+    setShowSuggestions(false);
+    setShouldFetchSuggestions(false);
+    setSearchSuggestions([]);
+    setSearchInput(suggestion);
+    dispatch(toggleBodyBackdrop());
+  };
 
   return (
     <header className="p-4 grid grid-flow-col shadow-md">
@@ -79,13 +125,18 @@ export const Header = () => {
             placeholder="Search"
             value={searchInput}
             onChange={handleSearchInput}
-            onBlur={handleSearchInputOnBlur}
+            // onBlur={handleSearchInputOnBlur}
             onFocus={handleSearchInputOnFocus}
+            id="search-input"
           />
           {showSuggestions && searchSuggestions?.length ? (
-            <ul className="absolute w-full border border-gray-300 rounded-lg bg-white text-left py-2 max-h-[70vh] overflow-auto">
+            <ul className="absolute w-full border border-gray-300 rounded-lg bg-white text-left py-2 max-h-[70vh] overflow-auto z-10">
               {searchSuggestions.map((suggestion) => (
-                <li className="py-2 px-4 border-b-2 text-sm hover:bg-gray-200">
+                <li
+                  key={suggestion}
+                  className="py-2 px-4 border-b-2 text-sm hover:bg-gray-200 cursor-pointer"
+                  onClick={() => handleSuggestionSelect(suggestion)}
+                >
                   {suggestion}
                 </li>
               ))}
