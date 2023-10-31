@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import { closeSidebarMenu } from "../utils/redux-store/appSlice";
 import { useEffect } from "react";
+import { VideoComments } from "./VideoComments";
 
 export const WatchVideoPage = () => {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ export const WatchVideoPage = () => {
   useEffect(() => {
     dispatch(closeSidebarMenu());
   }, [dispatch]);
+
   return (
     <div>
       <iframe
@@ -21,6 +23,8 @@ export const WatchVideoPage = () => {
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
       ></iframe>
+
+      <VideoComments videoId={videoId} />
     </div>
   );
 };
