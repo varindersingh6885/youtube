@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import appSlice from "./appSlice";
-import bodyBackdropSlice from "./bodyBackdropSlice";
+import videoSearchQuerySlice from "./videoSearchQuerySlice";
 
 export const appStore = configureStore({
   reducer: {
     app: appSlice,
-    bodyBackdrop: bodyBackdropSlice,
+    videoSearchQuery: videoSearchQuerySlice,
   },
 });
