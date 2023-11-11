@@ -26,13 +26,14 @@ export const Header = () => {
   };
 
   const fetchSearchSuggestions = async () => {
-    const data = await fetch(GET_SEARCH_SUGGESTIONS + searchInput);
-    const json = await data.json();
-    const suggestions = json?.suggestions?.map((suggestion) => {
-      return suggestion?.value;
-    });
+    // const data = await fetch(GET_SEARCH_SUGGESTIONS + searchInput);
+    // const json = await data.json();
+    // const suggestions = json?.suggestions?.map((suggestion) => {
+    //   return suggestion?.value;
+    // });
 
-    setSearchSuggestions(suggestions);
+    // setSearchSuggestions(suggestions);
+    const suggestions = ["iphone", "iphone 15", "iphone 14", "ipad air"];
 
     setSearchSuggestions(suggestions);
   };
@@ -108,6 +109,15 @@ export const Header = () => {
                   {suggestion}
                 </li>
               ))}
+              <li className="py-2 px-4 text-xs text-orange-400">
+                <div className="flex">
+                  <div className="m-1">Note:</div>
+                  <div className="m-1">
+                    These are hardcoded suggestions to display how this feature
+                    would work. The suggestions api will soon be integrated.
+                  </div>
+                </div>
+              </li>
             </ul>
           ) : null}
         </div>
