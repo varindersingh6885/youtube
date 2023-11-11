@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { toggleSidebarMenu } from "../utils/redux-store/appSlice";
 import HamburgerIcon from "../images/icon-hamburger.png";
@@ -9,6 +10,7 @@ import { setSearchQuery } from "../utils/redux-store/videoSearchQuerySlice";
 import { GET_SEARCH_SUGGESTIONS } from "../utils/constants";
 
 export const Header = () => {
+  const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -24,15 +26,13 @@ export const Header = () => {
   };
 
   const fetchSearchSuggestions = async () => {
-    // const data = await fetch(GET_SEARCH_SUGGESTIONS + searchInput);
-    // const json = await data.json();
-    // const suggestions = json?.suggestions?.map((suggestion) => {
-    //   return suggestion?.value;
-    // });
+    const data = await fetch(GET_SEARCH_SUGGESTIONS + searchInput);
+    const json = await data.json();
+    const suggestions = json?.suggestions?.map((suggestion) => {
+      return suggestion?.value;
+    });
 
-    // setSearchSuggestions(suggestions);
-
-    const suggestions = ["iphone", "iphone 15", "iphone 14 pro", "iphone red"];
+    setSearchSuggestions(suggestions);
 
     setSearchSuggestions(suggestions);
   };
@@ -41,12 +41,6 @@ export const Header = () => {
     setIsSearchInputFocused(true);
     setShowSuggestions(true);
     !!searchInput && fetchSearchSuggestions();
-  };
-  const handleSearchInputOnBlur = () => {
-    setTimeout(() => {
-      setIsSearchInputFocused(false);
-      setSearchSuggestions([]);
-    }, 200);
   };
 
   useEffect(() => {
@@ -63,11 +57,15 @@ export const Header = () => {
 
   const handleSuggestionSelect = (suggestion) => {
     setSearchInput(suggestion);
+    navigate("./");
+    setIsSearchInputFocused(false);
+    setSearchSuggestions([]);
     dispatch(setSearchQuery({ query: suggestion }));
   };
 
   const onSearchSubmit = (e) => {
     e.preventDefault();
+    navigate("./");
     dispatch(setSearchQuery({ query: searchInput }));
   };
 
@@ -96,7 +94,6 @@ export const Header = () => {
             placeholder="Search"
             value={searchInput}
             onChange={handleSearchInput}
-            onBlur={handleSearchInputOnBlur}
             onFocus={handleSearchInputOnFocus}
             id="search-input"
           />
@@ -111,16 +108,6 @@ export const Header = () => {
                   {suggestion}
                 </li>
               ))}
-
-              <li className="py-2 px-4 text-xs text-orange-400">
-                <div className="flex">
-                  <div className="m-1">Note:</div>
-                  <div className="m-1">
-                    These are hardcoded suggestions to display how this feature
-                    would work. The suggestions api will soon be integrated.
-                  </div>
-                </div>
-              </li>
             </ul>
           ) : null}
         </div>
